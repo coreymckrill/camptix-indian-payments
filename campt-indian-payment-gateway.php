@@ -178,19 +178,24 @@ class Camptix_Indian_Payments {
 			return;
 		}
 
-		wp_register_script( 'camptix-indian-payments-main-js', CAMPTIX_MULTI_URL . 'assets/js/camptix-multi-popup.js', array( 'jquery' ), false, CAMPTIX_INDIAN_PAYMENTS_VERSION );
-		wp_enqueue_script( 'camptix-indian-payments-main-js' );
+		global $camptix;
+		$enabled_methods = $camptix->get_enabled_payment_methods();
 
-		$data = apply_filters(
-			'camptix_indian_payments_localize_vars',
-			array(
-				'errors' => array(
-					'phone' => __( 'Please fill in all required fields.', 'campt-indian-payment-gateway' ),
-				),
-			)
-		);
+		if ( isset( $enabled_methods['camptix_razorpay'] ) ) {
+			wp_register_script( 'camptix-indian-payments-main-js', CAMPTIX_MULTI_URL . 'assets/js/camptix-multi-popup.js', array( 'jquery' ), false, CAMPTIX_INDIAN_PAYMENTS_VERSION );
+			wp_enqueue_script( 'camptix-indian-payments-main-js' );
 
-		wp_localize_script( 'camptix-indian-payments-main-js', 'camptix_inr_vars', $data );
+			$data = apply_filters(
+				'camptix_indian_payments_localize_vars',
+				array(
+					'errors' => array(
+						'phone' => __( 'Please fill in all required fields.', 'campt-indian-payment-gateway' ),
+					),
+				)
+			);
+
+			wp_localize_script( 'camptix-indian-payments-main-js', 'camptix_inr_vars', $data );
+		}
 	}
 }
 
